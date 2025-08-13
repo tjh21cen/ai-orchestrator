@@ -35,7 +35,11 @@ def ensure_branch_and_push(
     # Determine base branch if not supplied (prefers 'main' then 'master', else current)
     candidates = ["main", "master", repo.active_branch.name]
     base = base_branch or next(
-        (b for b in candidates if b in [h.name.replace("origin/", "") for h in origin.refs]),
+        (
+            b
+            for b in candidates
+            if b in [h.name.replace("origin/", "") for h in origin.refs]
+        ),
         candidates[-1],
     )
 
@@ -67,7 +71,9 @@ def open_pr(
     """
     token = os.getenv("GITHUB_TOKEN")
     if not token:
-        raise RuntimeError("GITHUB_TOKEN is not set. Put it in your ai-orchestrator/.env file.")
+        raise RuntimeError(
+            "GITHUB_TOKEN is not set. Put it in your ai-orchestrator/.env file."
+        )
     gh = Github(token)
     r = gh.get_repo(f"{owner}/{repo}")
     pr = r.create_pull(title=title, body=body, head=head_branch, base=base_branch)
