@@ -21,6 +21,10 @@ jobs:
           fetch-depth: 0
       - name: Run actionlint
         uses: rhysd/actionlint@v1
+      - name: Install yamllint
+        run: |
+          python -m pip install --upgrade pip
+          pip install yamllint
       - name: Check YAML
         run: |
           yamllint .github/workflows
