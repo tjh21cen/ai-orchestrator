@@ -19,8 +19,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Install actionlint
+        run: |
+          curl -sSL https://github.com/rhysd/actionlint/releases/latest/download/actionlint_$(uname -s)_$(uname -m).tar.gz \
+          | tar -xz -C /usr/local/bin
+
       - name: Run actionlint
-        uses: rhysd/actionlint@v1
+        run: |
+          actionlint
       - name: Install yamllint
         run: |
           python -m pip install --upgrade pip
@@ -28,3 +34,18 @@ jobs:
       - name: Check YAML
         run: |
           yamllint .github/workflows
+
+        # Install actionlint from the latest release tarball
+        - name: Install actionlint
+          shell: bash
+          run: |
+            set -euo pipefail
+            tmpdir="$(mktemp -d)"
+            cd "$tmpdir"
+            # Fetch latest release tarball for Linux amd64 (ubuntu-latest runner)
+            curl -fsSL \
+              https://github.com/rhysd/actionlint/releases/latest/download/actionlint_$(curl -fsSL https://api.github.com/repos/rhysd/actionlint/releases/latest | sed -n 's/.*"tag_name": *"v\{0,1\}\([0-9.]*\)".*/\1/p')_linux_amd64.tar.gz \
+              -o actionlint.tgz
+            tar -xzf actionlint.tgz
+            sudo mv actionlint /usr/local/bin/actionlint
+            actionlint --version
