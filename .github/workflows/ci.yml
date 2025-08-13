@@ -12,6 +12,7 @@ jobs:
     env:
       # Only this branch is allowed to receive CI auto-format pushes (test mode)
       ALLOWED_PUSH_BRANCHES: "ci-format-test2"
+      PYTHONPATH: "${{ github.workspace }}/src"
     permissions:
       contents: write  # needed to push auto-format commits
     strategy:
