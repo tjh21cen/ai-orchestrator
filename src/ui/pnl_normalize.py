@@ -2,7 +2,9 @@ from __future__ import annotations
 from typing import Any, Dict, List, Mapping, Optional
 
 
-def normalize_pnl(u: Any = None, d: Any = None, trades: Optional[Any] = None) -> Dict[str, Any]:
+def normalize_pnl(
+    u: Any = None, d: Any = None, trades: Optional[Any] = None
+) -> Dict[str, Any]:
     """
     Return a stable PnL schema:
         { "uPnL": float, "dPnL": float, "trades": list }
