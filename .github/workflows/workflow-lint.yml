@@ -1,0 +1,26 @@
+name: Workflow Lint
+
+on:
+  push:
+    paths:
+      - .github/workflows/**
+  pull_request:
+    paths:
+      - .github/workflows/**
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run actionlint
+        uses: rhysd/actionlint@v1
+      - name: Check YAML
+        run: |
+          yamllint .github/workflows
