@@ -1,0 +1,83 @@
+version: 1
+
+# --- Target project (stable facts) -------------------------------------------
+# Use absolute path on your Mac, or switch to "../coinbase-bot" if the folders sit side-by-side.
+target_repo: "/Users/tobyhirsch/Desktop/coinbase-bot"
+commit: HEAD
+language: python
+
+paths:
+  include:
+    - "src/**"
+    - "tests/**"
+  exclude:
+    - "data/**"
+    - "logs/**"
+    - "artifacts/**"
+    - "secrets/**"
+    - "keys/**"
+
+policy:
+  # If any file under src/ changes, require at least one test file to be added/modified.
+  require_tests_on_src_change: true
+  # Prevent the AI from ever editing your orchestrator tooling if it lives in the target repo.
+  protected_paths:
+    - "tools/orchestrator/**"
+
+scrub:
+  # Never send these to any AI agents when summarizing or planning.
+  ignore_globs:
+    - ".env"
+    - "secrets/**"
+    - "keys/**"
+    - "**/*.pem"
+
+# Commands the orchestrator will run locally or in CI after it opens a PR.
+# Adjust if you don’t use some of these yet.
+ci_checks:
+  - "ruff ."
+  - "pytest -q || true"           # keep green even if tests aren’t set up yet
+  - "mypy src --ignore-missing-imports || true"
+
+# Which agents to call for each role (you can change these later without touching logic)
+agents:
+  reader: "claude-3.7"             # repo summarizer
+  planner: "gpt-5-thinking"        # plan/patch-specs
+  coder: "copilot-chat"            # unified diffs only
+
+# --- Current job (parameters you change per run) ------------------------------
+job:
+  id: "fix-pnl-endpoint"
+  goal: "Normalize /api/pnl to always return {uPnL,dPnL,trades[]}."
+  scope:
+    # Only allow edits where PnL formatting/aggregation or the HTTP route likely live
+    allow:
+      - "src/ui/**"
+      - "src/metrics/**"
+      - "src/util/**"
+    # Keep the AI away from sensitive/unrelated areas
+    deny:
+      - "src/exchanges/**"
+      - "scripts/**"
+      - "keys/**"
+      - "secrets/**"
+  tests:
+    touched_required: true
+    add:
+      - "tests/test_ui_pnl.py"
+  acceptance:
+    - "pytest -q -k pnl || true"
+    - "ruff src/ui"
+    - "mypy src/ui --ignore-missing-imports || true"
+  patch_policy:
+    require_unified_diff: true
+    max_files: 4
+    max_lines: 200
+    fail_if_anchors_missing: true
+  branching:
+    prefix: "orchestrator/fix-pnl"
+    reviewers:
+      - "toby"
+      - "ci-bot"
+  # Modes: analyze_only (dry), plan_only (produce plan/specs), plan_and_pr (open PR with diffs)
+  mode: "plan_and_pr"

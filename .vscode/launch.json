@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Orchestrator",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "orchestrator.main",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+      },
+      "args": ["--dry-run"]
+    }
+  ]
+}

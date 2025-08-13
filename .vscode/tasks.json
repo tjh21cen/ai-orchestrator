@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "orchestrator: validate",
+      "type": "shell",
+      "command": "${config:python.defaultInterpreterPath} ${workspaceFolder}/src/orchestrator/main.py --config orchestrator.yml --dry-run",
+      "problemMatcher": []
+    }
+  ]
+}
