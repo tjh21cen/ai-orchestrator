@@ -5,7 +5,7 @@ import json
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import yaml
 from jsonschema import validate
@@ -46,14 +46,19 @@ def summarize(cfg: Dict[str, Any]) -> None:
     scope = job.get("scope", {})
     table.add_row("Scope.allow", ", ".join(scope.get("allow", [])))
     table.add_row("Scope.deny", ", ".join(scope.get("deny", [])))
-    table.add_row("Agents", f"reader={cfg['agents']['reader']}, planner={cfg['agents']['planner']}, coder={cfg['agents']['coder']}")
+    table.add_row(
+        "Agents",
+        f"reader={cfg['agents']['reader']}, planner={cfg['agents']['planner']}, coder={cfg['agents']['coder']}",
+    )
     table.add_row("Mode", job["mode"])
     console.print(table)
 
 
 def write_artifacts(cfg: Dict[str, Any], artifacts_dir: Path) -> None:
     artifacts_dir.mkdir(parents=True, exist_ok=True)
-    (artifacts_dir / "orchestrator.config.json").write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+    (artifacts_dir / "orchestrator.config.json").write_text(
+        json.dumps(cfg, indent=2), encoding="utf-8"
+    )
     (artifacts_dir / "README.txt").write_text(
         "Artifacts placeholder. This is where RepoSnapshot.json, ChangePlan.json, and PatchSet diffs will be saved.\n",
         encoding="utf-8",
@@ -75,7 +80,9 @@ def run(cfg_path: Path, dry_run: bool) -> None:
     log.info("Artifacts directory: %s", art)
 
     if dry_run or cfg["job"]["mode"] == "analyze_only":
-        console.print("[bold green]Dry-run complete.[/bold green] You can now edit orchestrator.yml and rerun.")
+        console.print(
+            "[bold green]Dry-run complete.[/bold green] You can now edit orchestrator.yml and rerun."
+        )
         return
 
     # --- Reader → Planner → Coder stubs (replace with your real calls) ---
@@ -105,8 +112,16 @@ def run(cfg_path: Path, dry_run: bool) -> None:
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="AI Orchestrator driver")
-    p.add_argument("--config", default="orchestrator.yml", help="Path to single-file orchestrator config")
-    p.add_argument("--dry-run", action="store_true", help="Validate and summarize without calling agents")
+    p.add_argument(
+        "--config",
+        default="orchestrator.yml",
+        help="Path to single-file orchestrator config",
+    )
+    p.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Validate and summarize without calling agents",
+    )
     return p.parse_args()
 
 

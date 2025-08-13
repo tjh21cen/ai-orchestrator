@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import Any, Dict, Iterable, List, Mapping, Optional
+from typing import Any, Dict, List, Mapping, Optional
+
 
 def normalize_pnl(u: Any = None, d: Any = None, trades: Optional[Any] = None) -> Dict[str, Any]:
     """
@@ -8,6 +9,7 @@ def normalize_pnl(u: Any = None, d: Any = None, trades: Optional[Any] = None) ->
     - Coerces u/d to float (defaults 0.0 on None/invalid)
     - Ensures trades is a list ([] on None / falsy)
     """
+
     # robust float conversion
     def _f(x: Any) -> float:
         try:
@@ -27,6 +29,7 @@ def normalize_pnl(u: Any = None, d: Any = None, trades: Optional[Any] = None) ->
         trades_list = [trades]
 
     return {"uPnL": _f(u), "dPnL": _f(d), "trades": trades_list}
+
 
 def normalize_from_mapping(raw: Any) -> Dict[str, Any]:
     """

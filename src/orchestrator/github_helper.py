@@ -5,6 +5,7 @@ from typing import Tuple
 from git import Repo, GitCommandError
 from github import Github
 
+
 def _owner_repo_from_url(url: str) -> Tuple[str, str]:
     """
     Accept HTTPS or SSH GitHub remote URLs and return (owner, repo) without .git.
@@ -17,7 +18,10 @@ def _owner_repo_from_url(url: str) -> Tuple[str, str]:
     owner, repo = s.split("/", 1)
     return owner, repo
 
-def ensure_branch_and_push(local_repo: Path, work_branch: str, base_branch: str | None = None) -> tuple[str, str, str]:
+
+def ensure_branch_and_push(
+    local_repo: Path, work_branch: str, base_branch: str | None = None
+) -> tuple[str, str, str]:
     """
     Checkout base, create/switch to work_branch, push to origin.
     Returns (owner, repo, default_base_branch_used).
@@ -30,7 +34,10 @@ def ensure_branch_and_push(local_repo: Path, work_branch: str, base_branch: str 
 
     # Determine base branch if not supplied (prefers 'main' then 'master', else current)
     candidates = ["main", "master", repo.active_branch.name]
-    base = base_branch or next((b for b in candidates if b in [h.name.replace("origin/", "") for h in origin.refs]), candidates[-1])
+    base = base_branch or next(
+        (b for b in candidates if b in [h.name.replace("origin/", "") for h in origin.refs]),
+        candidates[-1],
+    )
 
     # Checkout & update base
     repo.git.checkout(base)
@@ -51,7 +58,10 @@ def ensure_branch_and_push(local_repo: Path, work_branch: str, base_branch: str 
     owner, name = _owner_repo_from_url(origin.url)
     return owner, name, base
 
-def open_pr(owner: str, repo: str, head_branch: str, base_branch: str, title: str, body: str) -> str:
+
+def open_pr(
+    owner: str, repo: str, head_branch: str, base_branch: str, title: str, body: str
+) -> str:
     """
     Open a pull request using GITHUB_TOKEN. Returns PR URL.
     """

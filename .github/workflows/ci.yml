@@ -41,6 +41,18 @@ jobs:
           else
             echo "No requirements-dev.txt found; continuing."
           fi
+          python -m pip install pre-commit
+
+      - name: Run pre-commit (lint/format)
+        run: |
+          if [ -f .pre-commit-config.yaml ]; then
+            # Pre-commit will fail the job if any hook would change files or errors occur.
+            pre-commit run --all-files
+            # Double-check no files were modified (defense in depth).
+            git diff --quiet || (echo "Repository has uncommitted changes after pre-commit." && git status && exit 1)
+          else
+            echo "No .pre-commit-config.yaml found; skipping pre-commit."
+          fi
 
       - name: Lint (ruff)
         run: |

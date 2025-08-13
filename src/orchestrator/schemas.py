@@ -2,7 +2,15 @@ from __future__ import annotations
 
 CONFIG_SCHEMA = {
     "type": "object",
-    "required": ["version", "target_repo", "paths", "policy", "ci_checks", "agents", "job"],
+    "required": [
+        "version",
+        "target_repo",
+        "paths",
+        "policy",
+        "ci_checks",
+        "agents",
+        "job",
+    ],
     "properties": {
         "version": {"type": "integer"},
         "target_repo": {"type": "string", "minLength": 1},
@@ -13,19 +21,19 @@ CONFIG_SCHEMA = {
             "required": ["include", "exclude"],
             "properties": {
                 "include": {"type": "array", "items": {"type": "string"}},
-                "exclude": {"type": "array", "items": {"type": "string"}}
-            }
+                "exclude": {"type": "array", "items": {"type": "string"}},
+            },
         },
         "policy": {
             "type": "object",
             "properties": {
                 "require_tests_on_src_change": {"type": "boolean"},
-                "protected_paths": {"type": "array", "items": {"type": "string"}}
-            }
+                "protected_paths": {"type": "array", "items": {"type": "string"}},
+            },
         },
         "scrub": {
             "type": "object",
-            "properties": {"ignore_globs": {"type": "array", "items": {"type": "string"}}}
+            "properties": {"ignore_globs": {"type": "array", "items": {"type": "string"}}},
         },
         "ci_checks": {"type": "array", "items": {"type": "string"}},
         "agents": {
@@ -34,8 +42,8 @@ CONFIG_SCHEMA = {
             "properties": {
                 "reader": {"type": "string"},
                 "planner": {"type": "string"},
-                "coder": {"type": "string"}
-            }
+                "coder": {"type": "string"},
+            },
         },
         "job": {
             "type": "object",
@@ -47,15 +55,15 @@ CONFIG_SCHEMA = {
                     "type": "object",
                     "properties": {
                         "allow": {"type": "array", "items": {"type": "string"}},
-                        "deny": {"type": "array", "items": {"type": "string"}}
-                    }
+                        "deny": {"type": "array", "items": {"type": "string"}},
+                    },
                 },
                 "tests": {
                     "type": "object",
                     "properties": {
                         "touched_required": {"type": "boolean"},
-                        "add": {"type": "array", "items": {"type": "string"}}
-                    }
+                        "add": {"type": "array", "items": {"type": "string"}},
+                    },
                 },
                 "acceptance": {"type": "array", "items": {"type": "string"}},
                 "patch_policy": {
@@ -65,18 +73,18 @@ CONFIG_SCHEMA = {
                         "require_unified_diff": {"type": "boolean"},
                         "max_files": {"type": "integer"},
                         "max_lines": {"type": "integer"},
-                        "fail_if_anchors_missing": {"type": "boolean"}
-                    }
+                        "fail_if_anchors_missing": {"type": "boolean"},
+                    },
                 },
                 "branching": {
                     "type": "object",
                     "properties": {
                         "prefix": {"type": "string"},
-                        "reviewers": {"type": "array", "items": {"type": "string"}}
-                    }
+                        "reviewers": {"type": "array", "items": {"type": "string"}},
+                    },
                 },
-                "mode": {"enum": ["analyze_only", "plan_only", "plan_and_pr"]}
-            }
-        }
-    }
+                "mode": {"enum": ["analyze_only", "plan_only", "plan_and_pr"]},
+            },
+        },
+    },
 }
