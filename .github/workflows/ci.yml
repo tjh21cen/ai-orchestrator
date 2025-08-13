@@ -2,16 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ ci-format-test2 ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ ci-format-test2 ]
 
 jobs:
   build-test:
     runs-on: ubuntu-latest
     env:
-      # Only these branches are allowed to receive CI auto-format pushes
-      ALLOWED_PUSH_BRANCHES: "main,develop"
+      # Only this branch is allowed to receive CI auto-format pushes (test mode)
+      ALLOWED_PUSH_BRANCHES: "ci-format-test2"
     permissions:
       contents: write  # needed to push auto-format commits
     strategy:
