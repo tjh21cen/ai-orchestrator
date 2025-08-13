@@ -33,7 +33,9 @@ CONFIG_SCHEMA = {
         },
         "scrub": {
             "type": "object",
-            "properties": {"ignore_globs": {"type": "array", "items": {"type": "string"}}},
+            "properties": {
+                "ignore_globs": {"type": "array", "items": {"type": "string"}}
+            },
         },
         "ci_checks": {"type": "array", "items": {"type": "string"}},
         "agents": {

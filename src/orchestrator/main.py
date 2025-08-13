@@ -31,14 +31,18 @@ def validate_config(cfg: Dict[str, Any]) -> None:
     try:
         validate(instance=cfg, schema=CONFIG_SCHEMA)
     except ValidationError as e:
-        raise SystemExit(f"Config validation error: {e.message} at {list(e.absolute_path)}")
+        raise SystemExit(
+            f"Config validation error: {e.message} at {list(e.absolute_path)}"
+        )
 
 
 def summarize(cfg: Dict[str, Any]) -> None:
     table = Table(title="Orchestrator Plan (dry-run)", show_lines=True)
     table.add_column("Section")
     table.add_column("Details")
-    table.add_row("Target Repo", f"{cfg.get('target_repo')} @ {cfg.get('commit','HEAD')}")
+    table.add_row(
+        "Target Repo", f"{cfg.get('target_repo')} @ {cfg.get('commit','HEAD')}"
+    )
     table.add_row("Include", ", ".join(cfg["paths"]["include"]))
     table.add_row("Exclude", ", ".join(cfg["paths"]["exclude"]))
     job = cfg["job"]
@@ -66,7 +70,9 @@ def write_artifacts(cfg: Dict[str, Any], artifacts_dir: Path) -> None:
 
 
 def run(cfg_path: Path, dry_run: bool) -> None:
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s"
+    )
     # load local env (for GITHUB_TOKEN, etc.)
     load_dotenv()
     cfg = load_config(cfg_path)
@@ -94,7 +100,9 @@ def run(cfg_path: Path, dry_run: bool) -> None:
     job = cfg["job"]
     work_branch = job.get("branching", {}).get("prefix", f"orchestrator/{job['id']}")
     console.print(f"[cyan]Creating/pushing branch[/cyan]: {work_branch}")
-    owner, repo_name, base_branch = ensure_branch_and_push(Path(cfg["target_repo"]), work_branch)
+    owner, repo_name, base_branch = ensure_branch_and_push(
+        Path(cfg["target_repo"]), work_branch
+    )
 
     pr_title = job["goal"]
     reviewers = ", ".join(job.get("branching", {}).get("reviewers", []))
