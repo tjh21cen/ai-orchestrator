@@ -1,8 +1,8 @@
 # AI Orchestrator (workspace)
 
 This repo coordinates multiple AIs:
-• Reader (e.g., Claude) summarizes large codebases into a RepoSnapshot  
-• Planner (GPT-5 Thinking) outputs a ChangePlan + PatchSpecs  
+• Reader (e.g., Claude) summarizes large codebases into a RepoSnapshot
+• Planner (GPT-5 Thinking) outputs a ChangePlan + PatchSpecs
 • Coder (Copilot Chat or GPT-4/5) returns unified diffs (patches) only
 
 This scaffold focuses on config, validation, and run wiring. Model calls are stubbed so you can plug your providers later.
