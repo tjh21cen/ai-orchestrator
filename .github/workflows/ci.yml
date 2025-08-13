@@ -12,14 +12,11 @@ jobs:
     env:
       # Only this branch is allowed to receive CI auto-format pushes (test mode)
       ALLOWED_PUSH_BRANCHES: "ci-format-test2"
-      PYTHONPATH: "${{ github.workspace }}/src"
     permissions:
       contents: write  # needed to push auto-format commits
     strategy:
       matrix:
         python-version: [ "3.12", "3.13" ]
-    env:
-      PYTHONPATH: "${{ github.workspace }}/src"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -91,11 +88,12 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-              # Run formatting FIRST so CI can still succeed/push even if project deps have issues.
-              - name: Install tooling for formatting/lint
-                run: |
-                  python -m pip install --upgrade pip
-                  pip install pre-commit black ruff
+      - name: Show Python info
+        run: |
+          python -V
+          which python
+          pip -V
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
